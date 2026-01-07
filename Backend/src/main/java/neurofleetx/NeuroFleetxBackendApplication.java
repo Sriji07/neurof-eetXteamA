@@ -1,4 +1,4 @@
-package com.neurofleetx;
+package neurofleetx;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

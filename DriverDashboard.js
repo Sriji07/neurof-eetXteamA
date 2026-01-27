@@ -140,57 +140,50 @@ const DriverDashboard = () => {
 
   // ================= LIVE SIMULATION =================
   useEffect(() => {
-    let interval;
+  let interval;
 
-    if (tripStarted) {
-      interval = setInterval(() => {
-        // Battery drain
-        setBattery((prev) => Math.max(prev - 1, 5));
+  if (tripStarted) {
+    interval = setInterval(() => {
+      setBattery((prev) => Math.max(prev - 1, 5));
 
-        // Speed
-        const newSpeed = Math.floor(Math.random() * 40) + 20;
-        setSpeed(newSpeed);
+      const newSpeed = Math.floor(Math.random() * 40) + 20;
+      setSpeed(newSpeed);
 
-        // Trip time
-        setTripTime((prev) => prev + 3);
+      setTripTime((prev) => prev + 3);
 
-        // Distance
-        setDistanceCovered((prev) =>
-          +(prev + (newSpeed / 3600) * 3).toFixed(2)
-        );
+      setDistanceCovered((prev) =>
+        +(prev + (newSpeed / 3600) * 3).toFixed(2)
+      );
 
-        // Progress %
-        setTripProgress((prev) =>
-          Math.min((distanceCovered / currentTrip.distance) * 100 + 5, 100)
-        );
+      setTripProgress(() =>
+        Math.min((distanceCovered / currentTrip.distance) * 100 + 5, 100)
+      );
 
-        // Overspeed
-        if (newSpeed > 55) {
-          setOverspeedAlert("🚨 Overspeed Warning! Slow down.");
-        } else {
-          setOverspeedAlert("");
-        }
+      if (newSpeed > 55) {
+        setOverspeedAlert("🚨 Overspeed Warning! Slow down.");
+      } else {
+        setOverspeedAlert("");
+      }
 
-        // Battery alert
-        if (battery <= 20) {
-          setAlert("⚠️ Battery low! Please recharge soon.");
-        } else {
-          setAlert("");
-        }
+      if (battery <= 20) {
+        setAlert("⚠️ Battery low! Please recharge soon.");
+      } else {
+        setAlert("");
+      }
 
-        // Move vehicle slightly
-        setPosition((prev) => {
-          const newPos = [prev[0] + 0.0003, prev[1] + 0.0003];
-          setRoutePath((old) => [...old, newPos]);
-          return newPos;
-        });
-      }, 3000);
-    } else {
-      setSpeed(0);
-    }
+      setPosition((prev) => {
+        const newPos = [prev[0] + 0.0003, prev[1] + 0.0003];
+        setRoutePath((old) => [...old, newPos]);
+        return newPos;
+      });
+    }, 3000);
+  } else {
+    setSpeed(0);
+  }
 
-    return () => clearInterval(interval);
-  }, [tripStarted, battery, distanceCovered]);
+  return () => clearInterval(interval);
+}, [tripStarted, battery, distanceCovered, currentTrip.distance]);
+
 
   const resetTripStats = () => {
     setTripStarted(false);
